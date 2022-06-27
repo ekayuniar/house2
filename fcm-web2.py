@@ -9,7 +9,7 @@ st.write("""
 # Clustering Fuzzy C Means
 """)
 
-fcm = pickle.load(open('./model/model_fcm2.pkl', 'rb'))
+fcm = pickle.load(open('./Model/model_fcm2.pkl', 'rb'))
 
 
 def run():
@@ -35,9 +35,9 @@ def run():
     jrk_toll = st.selectbox('Jarak Toll', toll, format_func=lambda x: t[x])
 
     jrk_transport = st.number_input(
-        'Jarak Transportasi', min_value=None, max_value=None)
+        'Jarak Transportasi', min_value=1, max_value=None)
     jrk_supermarket = st.number_input(
-        'Jarak Supermarket', min_value=None, max_value=None)
+        'Jarak Supermarket', min_value=1, max_value=None)
 
     hm = {1: 'Modern', 2: 'Minimalis', 3: 'Klasik Modern', 4: 'Kontemporer'}
     house_m = list(hm.keys())
@@ -47,9 +47,9 @@ def run():
     luas_rumah = st.number_input(
         'Luas Rumah dalam satuan m2', min_value=1, max_value=None)
     uk_rumah = st.number_input(
-        'Ukuran Rumah dalam satuan m2', min_value=None, max_value=None)
+        'Ukuran Rumah dalam satuan m2', min_value=1, max_value=None)
     hrg_beli = st.number_input(
-        'Silahkan input Harga Rumah dalam satuan Ratusan Juta/Milyar', step=1, min_value=1, max_value=None)
+        'Silahkan input Harga Rumah dalam satuan Ratusan Juta/Milyar', min_value=1, step=1, max_value=None)
 
     st.subheader('Tabel Inputan Data')
     data = {'Fasilitas Olahraga': fas_olga,
@@ -63,8 +63,10 @@ def run():
             'Ukuran Rumah': uk_rumah,
             'Harga Beli': hrg_beli}
     fitur = pd.DataFrame(data, index=[0])
+    #fcm = FCM(n_cluster=2, max_iter=1000)
+
     st.write(fitur)
-# print(arr[int(my_float)])
+
     prediksi = fcm.centers[fitur]
     labels = fcm.u.argmax(axis=1)
 
