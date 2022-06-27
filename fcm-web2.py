@@ -9,7 +9,7 @@ st.write("""
 # Clustering Fuzzy C Means
 """)
 
-fcm = pickle.load(open('./Model/model_fcm2.pkl', 'rb'))
+fcm = pickle.load(open('./model/model_fcm2.pkl', 'rb'))
 
 
 def run():
