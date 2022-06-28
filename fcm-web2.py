@@ -9,7 +9,7 @@ st.write("""
 # Clustering Fuzzy C Means
 """)
 
-fcm = pickle.load(open('./model/model_fcm2.pkl', 'rb'))
+fcmm3 = pickle.load(open('./model/model_fcm2.pkl', 'rb'))
 
 
 def run():
@@ -23,34 +23,24 @@ def run():
     fas_keamanan = st.selectbox(
         'Fasilitas Keamanan', fas_aman, format_func=lambda x: aman[x])
 
-    airport = {1: '< 5 km', 2: '5 - 10 km', 3: '20 - 40 km',
-               4: '40 - 60 km', 5: '60 - 100 km', 6: '100 - 200 km', 7: '>200 km'}
-    jrk_airport1 = list(airport.keys())
-    jrk_airport = st.selectbox(
-        'Jarak Airport', jrk_airport1, format_func=lambda x: airport[x])
-
-    t = {1: '< 5 km', 2: '5 - 10 km', 3: '20 - 30 km',
-         4: '30 - 40 km', 5: '40 - 50 km', 6: '100 - 200 km', 7: '>200 km'}
-    toll = list(t.keys())
-    jrk_toll = st.selectbox('Jarak Toll', toll, format_func=lambda x: t[x])
-
+    jrk_airport = st.number_input(
+        'Input Jarak Airport terdekat dalam satuan Km')
+    jrk_toll = st.number_input(
+        'Input Jarak Toll terdekat dalam satuan Km')
     jrk_transport = st.number_input(
-        'Jarak Transportasi', min_value=1, max_value=None)
+        'Input Jarak Transportasi umum terdekat dalam satuan Km')
     jrk_supermarket = st.number_input(
-        'Jarak Supermarket', min_value=1, max_value=None)
+        'Input Jarak supermarket terdekat dalam satuan Km')
 
     hm = {1: 'Modern', 2: 'Minimalis', 3: 'Klasik Modern', 4: 'Kontemporer'}
     house_m = list(hm.keys())
     house_model = st.selectbox(
         'Model Rumah', house_m, format_func=lambda x: hm[x])
 
-    luas_rumah = st.number_input(
-        'Luas Rumah dalam satuan m2', min_value=1, max_value=None)
-    uk_rumah = st.number_input(
-        'Ukuran Rumah dalam satuan m2', min_value=1, max_value=None)
-    hrg_beli = st.number_input(
-        'Silahkan input Harga Rumah dalam satuan Ratusan Juta/Milyar', min_value=1, step=1, max_value=None)
+    luas_rumah = st.number_input('Input Luas Tanah dalam M2')
+    uk_rumah = st.number_input('Input Ukuran Bangunan Rumah dalam M2')
 
+    hrg_beli = st.number_input('Input Harga Beli')
     st.subheader('Tabel Inputan Data')
     data = {'Fasilitas Olahraga': fas_olga,
             'Fasilitas Keamanan': fas_keamanan,
@@ -59,24 +49,29 @@ def run():
             'Jarak Transport': jrk_transport,
             'Jarak Supermarket': jrk_supermarket,
             'Model Rumah': house_model,
-            'Luas Rumah': luas_rumah,
-            'Ukuran Rumah': uk_rumah,
-            'Harga Beli': hrg_beli}
+            'Luas Rumah': int(luas_rumah),
+            'Ukuran Rumah': int(uk_rumah),
+            'Harga Beli': int(hrg_beli)}
     fitur = pd.DataFrame(data, index=[0])
-    #fcm = FCM(n_cluster=2, max_iter=1000)
-
     st.write(fitur)
 
-    prediksi = fcm.centers[fitur]
-    labels = fcm.u.argmax(axis=1)
-
-    #st.subheader('Keterangan Label Kelas')
-    #keterangan = np.array(['MEWAH', 'TIDAK MEWAH'])
-    # st.write(keterangan)
-
     st.subheader('Hasil Clustering Rumah dengan Fuzzy C Means')
-    keterangan = np.array(0)
-    st.write(labels[keterangan])
+    if st.button("Submit"):
+        fitur = pd.DataFrame(data, index=[0])
+        print(fitur)
+        prediction = fcmm3.predict(fitur.values)
+        lc = [str(i) for i in prediction]
+        ans = int("".join(lc))
+        keterangan = np.array(0)
+        labels2 = (prediction[keterangan])
+        if ans == 0:
+            st.error(
+                labels2
+            )
+        else:
+            st.success(
+                labels2
+            )
 
 
 run()
